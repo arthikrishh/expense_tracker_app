@@ -44,23 +44,6 @@ Built with clean architecture, scalable state management, and modern UI principl
 
 ---
 
-## 📂 Project Structure
-
-lib/
-│
-├── core/
-├── models/
-├── providers/
-├── screens/
-├── services/
-├── widgets/
-└── main.dart
-
-
-Structured using separation of concerns for scalability and maintainability.
-
----
-
 ## 🖥 Getting Started
 
 ### 1️⃣ Clone the repository
