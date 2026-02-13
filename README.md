@@ -1,411 +1,339 @@
-Expense Tracker App
+# Expense Tracker App
 
-A comprehensive Flutter-based Expense Tracking Application designed to help users manage their personal finances efficiently.
+A production-ready Flutter application for personal finance management built using clean architecture principles, Provider state management, and SQLite local persistence.
 
-Built with Material Design 3, Provider state management, and SQLite local persistence, this app delivers a smooth, responsive, and scalable financial management experience.
+This project demonstrates scalable Flutter application development with proper separation of concerns, optimized state handling, and maintainable database integration.
 
-🚀 Project Overview
+---
 
-The Expense Tracker App enables users to:
+## Overview
 
-Track daily expenses
+The Expense Tracker App allows users to:
 
-Categorize spending
+- Record daily expenses
+- Categorize spending
+- Analyze financial patterns
+- View graphical statistics
+- Persist data locally using SQLite
+- Switch between light and dark themes
 
-Visualize spending trends
+The application follows a modular architecture and is structured for long-term scalability and maintainability.
 
-Manage financial data locally
+---
 
-Switch between light & dark themes
+## Architecture
 
-The app follows clean architecture principles with a modular folder structure, making it scalable and maintainable.
+The application is built using a layered architecture approach:
 
-🏗️ Architecture & Tech Stack
-🛠 Core Technologies
+- **Presentation Layer** → Screens & Widgets
+- **State Layer** → Providers (ChangeNotifier)
+- **Data Layer** → SQLite Database
+- **Model Layer** → Entity definitions
+- **Utility Layer** → Helpers and constants
 
-Flutter SDK – Cross-platform mobile development framework
+State management is handled using the Provider package to ensure reactive UI updates with minimal rebuild cost.
 
-Provider (v6.1.1) – State management
+---
 
-SQLite – Local database storage
+## Tech Stack
 
-SharedPreferences – Persistent app settings
+| Technology | Purpose |
+|------------|----------|
+| Flutter | Cross-platform development |
+| Provider (v6.1.1) | State management |
+| SQLite (sqflite) | Local data persistence |
+| SharedPreferences | Theme preference storage |
+| fl_chart (v0.66.0) | Data visualization |
+| intl | Date & currency formatting |
+| uuid | Unique ID generation |
 
-FL Chart (v0.66.0) – Data visualization (Pie charts)
+---
 
-Intl – Date & currency formatting
+## Project Structure
 
-UUID – Unique identifier generation
-
-📂 Project Structure
+```
 lib/
 │
 ├── models/
+│   ├── category_model.dart
+│   └── expense_model.dart
+│
 ├── database/
+│   └── database_helper.dart
+│
 ├── providers/
+│   ├── expense_provider.dart
+│   └── theme_provider.dart
+│
 ├── screens/
+│   ├── home_screen.dart
+│   ├── add_expense_screen.dart
+│   ├── statistics_screen.dart
+│   └── settings_screen.dart
+│
 ├── widgets/
+│   ├── expense_card.dart
+│   ├── category_chip.dart
+│   └── custom_chart.dart
+│
 ├── utils/
+│   ├── constants.dart
+│   └── helpers.dart
+│
 └── main.dart
+```
 
-📦 Models Layer
-1️⃣ Category Model
+The structure enforces separation of concerns and keeps business logic independent from UI components.
 
-Represents expense categories.
+---
 
-Fields:
+## Database Design
 
-id – Unique identifier
+The app uses SQLite for persistent local storage.
 
-name – Category name (Food, Transport, etc.)
+### Categories Table
 
-color – UI color representation
+```sql
+CREATE TABLE categories (
+  id TEXT PRIMARY KEY,
+  name TEXT,
+  color INTEGER,
+  icon TEXT
+);
+```
 
-icon – Emoji/icon for identification
+### Expenses Table
 
-Includes:
+```sql
+CREATE TABLE expenses (
+  id TEXT PRIMARY KEY,
+  title TEXT,
+  amount REAL,
+  date TEXT,
+  categoryId TEXT,
+  notes TEXT,
+  receiptUrl TEXT,
+  FOREIGN KEY (categoryId) REFERENCES categories(id)
+);
+```
 
-toMap()
+### Key Design Decisions
 
-fromMap()
+- UUID used for primary keys
+- Date stored in ISO 8601 string format
+- Foreign key constraint ensures relational integrity
+- Default categories auto-inserted on first launch
 
-2️⃣ Expense Model
+---
 
-Represents an individual expense entry.
+## State Management
 
-Fields:
+Provider is used for reactive state handling.
 
-id
+### ExpenseProvider Responsibilities
 
-title
+- Load initial data
+- Add expenses
+- Update expenses
+- Delete expenses
+- Filter by month
+- Aggregate by category
+- Notify UI using `notifyListeners()`
 
-amount
+### ThemeProvider Responsibilities
 
-date
+- Toggle light/dark/system mode
+- Persist theme preference using SharedPreferences
+- Apply ThemeMode dynamically
 
-categoryId
+---
 
-notes
+## Core Features
 
-receiptUrl
+### 1. Expense Management
 
-Includes database conversion utilities.
+- Create new expense entries
+- Edit existing expenses
+- Delete expenses with confirmation dialog
+- Automatic UI refresh on data change
 
-🗄️ Database Layer
-Database Helper (Singleton Pattern)
+### 2. Categorization
 
-Manages:
+- 8 pre-defined categories
+- Color-coded visual indicators
+- Icon-based category identification
+- Category-based filtering & aggregation
 
-Database initialization
+### 3. Statistics & Visualization
 
-Table creation
+- Pie chart distribution by category
+- Weekly / Monthly / Yearly filtering
+- Category-wise progress indicators
+- Summary cards for total spending
 
-CRUD operations
+### 4. Theme Support
 
-Pre-population of default categories
+- Light Mode
+- Dark Mode
+- System Default Mode
+- Persistent theme selection
 
-📋 Database Schema
-Categories Table
-Column	Type
-id	TEXT (PK)
-name	TEXT
-color	INTEGER
-icon	TEXT
-Expenses Table
-Column	Type
-id	TEXT (PK)
-title	TEXT
-amount	REAL
-date	TEXT
-categoryId	TEXT (FK)
-notes	TEXT
-receiptUrl	TEXT
-🔄 Providers Layer
-ExpenseProvider
+### 5. Data Persistence
 
-Handles all expense-related logic:
-
-Load data
-
-Add expense
-
-Update expense
-
-Delete expense
-
-Monthly filtering
-
-Category-wise aggregation
-
-Uses notifyListeners() for real-time UI updates.
-
-ThemeProvider
-
-Light/Dark/System theme support
-
-Persistent theme preference
-
-Instant theme switching
-
-🖥️ Screens
-🏠 Home Screen
-
-Total Expense Summary
-
-Current Month Summary
-
-Expense List (chronological)
-
-Pull-to-refresh
-
-Add Expense FAB
-
-Navigation to:
-
-Statistics
-
-Settings
-
-➕ Add/Edit Expense Screen
-
-Includes:
-
-Title input (required)
-
-Amount input (validated)
-
-Date picker
-
-Category selector grid
-
-Notes field (optional)
-
-Validation Rules:
-
-Title required
-
-Positive amount only
-
-Category selection mandatory
-
-📊 Statistics Screen
-
-Period filter (Week / Month / Year)
-
-Summary cards
-
-Pie chart visualization
-
-Category breakdown
-
-Navigation between periods
-
-⚙️ Settings Screen
-
-Dark mode toggle
-
-Data management options
-
-Backup/Restore (future-ready)
-
-Clear all data
-
-App version info
-
-🎯 Key Features
-✅ Expense Management
-
-Create expenses
-
-Edit expenses
-
-Delete with confirmation
-
-Real-time UI updates
-
-✅ Categorization
-
-8 predefined categories
-
-Color-coded UI
-
-Icon-based identification
-
-✅ Data Visualization
-
-Pie charts
-
-Category distribution
-
-Monthly expense summary
-
-Progress indicators
-
-✅ Persistent Storage
-
-SQLite database
-
-Local data saving
-
-Theme preference storage
-
-✅ UI/UX Excellence
-
-Material Design 3
-
-Responsive layout
-
-Smooth animations
-
-Dark/Light theme
-
-🔁 Data Flow
-User Action
-    ↓
+- Offline-first architecture
+- SQLite storage
+- Data remains after app restart
+- Local theme preference storage
+
+---
+
+## Data Flow
+
+```
+User Interaction
+        ↓
+Screen Widget
+        ↓
 Provider Method
-    ↓
-Database Operation
-    ↓
+        ↓
+Database Operation (Async)
+        ↓
 notifyListeners()
-    ↓
-UI Rebuild
+        ↓
+Consumer Widget Rebuild
+```
 
-⚡ Performance Optimizations
+This ensures unidirectional and predictable state updates.
 
-Lazy loading
+---
 
-Efficient ListView.builder
+## Performance Considerations
 
-Optimized database queries
+- ListView.builder for efficient rendering
+- Lazy data loading
+- Minimal widget rebuilds using Consumer
+- Async database operations
+- Optimized SQL queries
 
-Controlled widget rebuilds using Consumer
+---
 
-🔒 Security & Data Integrity
+## Error Handling Strategy
 
-Input validation
+- Form-level validation before submission
+- Try-catch for database operations
+- Confirmation dialogs for destructive actions
+- Empty state handling for charts and lists
 
-Foreign key constraints
+---
 
-Confirmation dialogs before delete
+## Installation
 
-Try-catch error handling
+### Clone Repository
 
-📱 Platform Support
-
-✅ Android
-
-✅ iOS
-
-✅ Web (basic support)
-
-✅ Desktop (experimental)
-
-🎨 UI/UX Principles
-
-Consistency in design
-
-Immediate visual feedback
-
-Accessible text & contrast
-
-Minimal tap interaction
-
-Clean navigation flow
-
-📈 Scalability
-
-Modular architecture
-
-Provider-based state management
-
-Optimized database schema
-
-Easily extendable for:
-
-Cloud sync
-
-Budget limits
-
-Recurring expenses
-
-Multi-currency
-
-Biometric lock
-
-Reports (PDF/Excel)
-
-🛠️ Installation
-1️⃣ Clone the repository
+```bash
 git clone https://github.com/your-username/expense-tracker.git
+```
 
-2️⃣ Navigate to project folder
+### Navigate to Project
+
+```bash
 cd expense-tracker
+```
 
-3️⃣ Install dependencies
+### Install Dependencies
+
+```bash
 flutter pub get
+```
 
-4️⃣ Run the app
+### Run Application
+
+```bash
 flutter run
+```
 
-📦 Dependencies
-provider: ^6.1.1
-fl_chart: ^0.66.0
-intl:
-uuid:
-shared_preferences:
-sqflite:
-path_provider:
+---
 
-📌 Future Enhancements
+## Dependencies (pubspec.yaml)
 
-☁️ Cloud sync (Firebase integration)
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  provider: ^6.1.1
+  sqflite:
+  path_provider:
+  shared_preferences:
+  fl_chart: ^0.66.0
+  intl:
+  uuid:
+```
 
-📊 Budget tracking & alerts
+---
 
-🧾 Receipt image capture
+## Scalability & Extensibility
 
-📑 PDF & Excel reports
+The architecture supports future expansion such as:
 
-🔁 Recurring expenses
+- Cloud sync (Firebase integration)
+- Recurring expense automation
+- Budget limits with alerts
+- Multi-currency support
+- Export to PDF / Excel
+- Biometric authentication
+- Notification reminders
+- Financial analytics & AI insights
 
-💱 Multi-currency support
+The modular structure allows new features without impacting existing functionality.
 
-🔐 Biometric authentication
+---
 
-🔔 Smart notifications
+## Platform Support
 
-📈 AI-powered spending insights
+- Android
+- iOS
+- Web (basic support)
+- Desktop (experimental)
 
-👥 Target Users
+---
 
-Individuals managing personal finances
+## Design Principles Followed
 
-Students tracking monthly budgets
+- Clean Architecture
+- Separation of Concerns
+- Reactive State Management
+- Maintainable Code Structure
+- Offline-First Approach
+- Material Design 3 Compliance
 
-Freelancers tracking business expenses
+---
 
-Families monitoring shared expenses
+## Why This Project Matters
 
-Travelers managing trip expenses
+This application demonstrates:
 
-⭐ Contribution
+- Real-world Flutter architecture
+- Proper database modeling
+- State management best practices
+- Professional UI implementation
+- Scalable application design
+- Clean and maintainable code organization
 
-Contributions, issues, and feature requests are welcome!
+It is suitable for:
 
-If you like this project, please give it a ⭐ on GitHub.
+- Portfolio showcase
+- Technical interviews
+- Production-level starter template
+- Learning advanced Flutter concepts
 
-💡 Final Note
+---
 
-This project demonstrates:
+## License
 
-Clean architecture
+This project is open-source and available under the MIT License.
 
-Proper state management
+---
 
-Database integration
+## Author
 
-Professional UI/UX implementation
-
-Scalable Flutter development practices
-
-It serves as a strong portfolio project showcasing real-world Flutter application development.
+Developed using Flutter with a focus on performance, scalability, and clean architecture.
