@@ -45,3 +45,61 @@ Built with clean architecture, scalable state management, and modern UI principl
 ---
 
 ## 📂 Project Structure
+
+lib/
+│
+├── core/
+├── models/
+├── providers/
+├── screens/
+├── services/
+├── widgets/
+└── main.dart
+
+
+Structured using separation of concerns for scalability and maintainability.
+
+---
+
+## 🖥 Getting Started
+
+### 1️⃣ Clone the repository
+
+### 2️⃣ Navigate into the project
+
+### 3️⃣ Install dependencies
+
+### 4️⃣ Run the app
+
+---
+
+## 📈 Future Enhancements
+
+- Dark mode support
+- Budget limit alerts
+- Charts and visual analytics
+- Firebase cloud sync
+- Authentication system
+- Export data as CSV
+
+---
+
+## 🎯 Purpose of This Project
+
+This project demonstrates:
+- Clean Flutter architecture
+- Real-world state management
+- Local data persistence
+- UI/UX design implementation
+- Proper Git & GitHub workflow
+
+---
+
+## 👩‍💻 Author
+
+**Aarthi Krishnan**  
+Flutter Developer 🚀
+
+---
+
+⭐ If you like this project, consider giving it a star!
