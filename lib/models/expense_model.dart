@@ -6,6 +6,10 @@ class Expense {
   final String categoryId;
   final String? notes;
   final String? receiptUrl;
+  final bool isRecurring;
+  final String? recurringFrequency;
+  final List<String>? tags;
+  final String? location;
 
   Expense({
     required this.id,
@@ -15,6 +19,10 @@ class Expense {
     required this.categoryId,
     this.notes,
     this.receiptUrl,
+    this.isRecurring = false,
+    this.recurringFrequency,
+    this.tags,
+    this.location,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +34,10 @@ class Expense {
       'categoryId': categoryId,
       'notes': notes,
       'receiptUrl': receiptUrl,
+      'isRecurring': isRecurring ? 1 : 0,
+      'recurringFrequency': recurringFrequency,
+      'tags': tags?.join(','),
+      'location': location,
     };
   }
 
@@ -38,6 +50,11 @@ class Expense {
       categoryId: map['categoryId'],
       notes: map['notes'],
       receiptUrl: map['receiptUrl'],
+      isRecurring: map['isRecurring'] == 1,
+      recurringFrequency: map['recurringFrequency'],
+      tags: map['tags'] != null ? (map['tags'] as String).split(',') : null,
+      location: map['location'],
     );
   }
 }
+

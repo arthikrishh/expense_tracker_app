@@ -3,12 +3,16 @@ class Category {
   final String name;
   final int color;
   final String icon;
+  final double budget;
+  final bool isCustom;
 
   Category({
     required this.id,
     required this.name,
     required this.color,
     required this.icon,
+    this.budget = 0,
+    this.isCustom = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -17,6 +21,8 @@ class Category {
       'name': name,
       'color': color,
       'icon': icon,
+      'budget': budget,
+      'isCustom': isCustom ? 1 : 0,
     };
   }
 
@@ -26,6 +32,8 @@ class Category {
       name: map['name'],
       color: map['color'],
       icon: map['icon'],
+      budget: map['budget'] ?? 0,
+      isCustom: map['isCustom'] == 1,
     );
   }
 }
