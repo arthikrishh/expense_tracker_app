@@ -357,47 +357,56 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     );
   }
 
-  // Fixed floating action button with proper touch feedback
-  Widget _buildFloatingActionButton() {
-    return OpenContainer(
-      transitionType: ContainerTransitionType.fade,
-      transitionDuration: const Duration(milliseconds: 300),
-      openBuilder: (context, _) => const AddExpenseScreen(),
-      closedElevation: 6,
-      closedShape: const CircleBorder(),
-      closedColor: Colors.transparent,
-      closedBuilder: (context, openContainer) {
-        return InkWell(
-          onTap: openContainer,
-          borderRadius: BorderRadius.circular(28),
-          child: Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Colors.blue, Colors.purple],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+ // Fixed floating action button with proper return type
+Widget _buildFloatingActionButton() {
+  return OpenContainer(
+    transitionType: ContainerTransitionType.fade,
+    transitionDuration: const Duration(milliseconds: 300),
+    openBuilder: (context, _) => const AddExpenseScreen(),
+    closedElevation: 6,
+    closedShape: const CircleBorder(),
+    closedColor: Colors.transparent,
+    // FIX: Add this to handle the result properly
+    onClosed: (result) {
+      // Optional: Do something when closed
+      // You can refresh data here if needed
+      if (mounted) {
+        // Refresh data if needed
+        Provider.of<ExpenseProvider>(context, listen: false).loadData();
+      }
+    },
+    closedBuilder: (context, openContainer) {
+      return InkWell(
+        onTap: openContainer,
+        borderRadius: BorderRadius.circular(28),
+        child: Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [Colors.blue, Colors.purple],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(28),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blue.withOpacity(0.3),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
               ),
-              borderRadius: BorderRadius.circular(28),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.blue.withOpacity(0.3),
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 28,
-            ),
+            ],
           ),
-        );
-      },
-    );
-  }
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+            size: 28,
+          ),
+        ),
+      );
+    },
+  );
+}
 
   // Fixed monthly summary card with no RenderFlex issues
   Widget _buildMonthlySummaryCard(
@@ -811,17 +820,20 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 child: ExpenseCard(
                   expense: expense,
                   category: category,
-                  onTap: () async {
-                    final result = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddExpenseScreen(expense: expense),
-                      ),
-                    );
-                    if (result == true) {
-                      // Refresh if needed
-                    }
-                  },
+                // In _buildExpensesList method, update the onTap:
+onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => AddExpenseScreen(expense: expense),
+    ),
+  ).then((_) {
+    // Optional: Refresh data when returning
+    if (mounted) {
+      Provider.of<ExpenseProvider>(context, listen: false).loadData();
+    }
+  });
+},
                   onDelete: () {
                     _showDeleteDialog(context, expense.id);
                   },
