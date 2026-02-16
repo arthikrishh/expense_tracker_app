@@ -949,80 +949,81 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> with SingleTickerPr
   }
 
   void _submitForm() {
-    if (_formKey.currentState!.validate()) {
-      if (_selectedCategoryId == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: const [
-                Icon(Icons.error, color: Colors.white),
-                SizedBox(width: 8),
-                Text('Please select a category'),
-              ],
-            ),
-            backgroundColor: Colors.red,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+  if (_formKey.currentState!.validate()) {
+    if (_selectedCategoryId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: const [
+              Icon(Icons.error, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Please select a category'),
+            ],
           ),
-        );
-        return;
-      }
-
-      final expense = Expense(
-        id: _isEditing ? widget.expense!.id : const Uuid().v4(),
-        title: _titleController.text,
-        amount: double.parse(_amountController.text),
-        date: _selectedDate,
-        categoryId: _selectedCategoryId!,
-        notes: _notesController.text.isNotEmpty ? _notesController.text : null,
-        isRecurring: _isRecurring,
-        recurringFrequency: _selectedRecurringFrequency,
-        tags: _selectedTags.isNotEmpty ? _selectedTags : null,
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
       );
-
-      if (_isEditing) {
-        Provider.of<ExpenseProvider>(context, listen: false).updateExpense(expense);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: const [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('Expense updated successfully!'),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      } else {
-        Provider.of<ExpenseProvider>(context, listen: false).addExpense(expense);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: const [
-                Icon(Icons.check_circle, color: Colors.white),
-                SizedBox(width: 8),
-                Text('Expense added successfully!'),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        );
-      }
-
-      Navigator.pop(context, true);
+      return;
     }
+
+    final expense = Expense(
+      id: _isEditing ? widget.expense!.id : const Uuid().v4(),
+      title: _titleController.text,
+      amount: double.parse(_amountController.text),
+      date: _selectedDate,
+      categoryId: _selectedCategoryId!,
+      notes: _notesController.text.isNotEmpty ? _notesController.text : null,
+      isRecurring: _isRecurring,
+      recurringFrequency: _selectedRecurringFrequency,
+      tags: _selectedTags.isNotEmpty ? _selectedTags : null,
+    );
+
+    if (_isEditing) {
+      Provider.of<ExpenseProvider>(context, listen: false).updateExpense(expense);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: const [
+              Icon(Icons.check_circle, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Expense updated successfully!'),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
+    } else {
+      Provider.of<ExpenseProvider>(context, listen: false).addExpense(expense);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: const [
+              Icon(Icons.check_circle, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Expense added successfully!'),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
+    }
+
+    // FIX: Don't pass any value when popping
+    Navigator.pop(context);
   }
+}
 }
 
 // Custom painter for background decoration
