@@ -4,7 +4,7 @@ A production-ready Flutter application for personal finance management built usi
 
 This project demonstrates scalable Flutter application development with proper separation of concerns, optimized state handling, and maintainable database integration.
 
---- 
+---      
     
 ## Overview
 
