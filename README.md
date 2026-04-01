@@ -19,7 +19,7 @@ The Expense Tracker App allows users to:
 
 The application follows a modular architecture and is structured for long-term scalability and maintainability.
 
----
+---    
 
 ## Architecture
 
